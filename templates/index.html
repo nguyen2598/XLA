@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing Web App</title>
+</head>
+<body>
+    <h1>(●'◡'●)</h1>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".png, .jpg, .jpeg" required>
+        <br>
+        <button type="submit">Process Image</button>
+    </form>
+    <br>
+    <button id="applyMedianFilter">Apply Median Filter</button>
+    <button id="applyMidpointFilter">Apply Midpoint Filter</button>
+    <button id="cropImage">Crop Image</button>
+    <button id="resizeImage">Resize Image</button>
+    <button id="min">min</button>
+    <button id="max">max</button>
+    <button id="negative">âm bản</button>
+    <button id="thresholding">thresholding</button>
+    <button id="logarit">logarit</button>
+    <button id="erosion">Co ảnh</button>
+    <button id="dilation">dãn ảnh</button>
+    <button id="closing">closing</button>
+    <button id="opening">opening</button>
+    <button id="prewitt">prewitt</button>
+    <button id="sobel">sobel</button>
+    <button id="roberts">roberts</button>
+    <button id="laplacian">laplacian</button>
+    <img id="processedImage" style="display:none;" alt="Processed Image">
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const processedImage = document.getElementById('processedImage');
+        const applyMedianFilterButton = document.getElementById('applyMedianFilter');
+        const applyMidpointFilterButton = document.getElementById('applyMidpointFilter');
+        const cropImageButton = document.getElementById('cropImage');
+        const resizeImageButton = document.getElementById('resizeImage');
+        const minButton = document.getElementById('min');
+        const maxButton = document.getElementById('max');
+
+        const negativeButton= document.getElementById('negative');
+        const thresholdingButton= document.getElementById('thresholding');
+        const logaritButton= document.getElementById('logarit');
+        const erosionButton= document.getElementById('erosion');
+
+         const dilationButton= document.getElementById('dilation');
+        const openingButton= document.getElementById('opening');
+        const closingButton= document.getElementById('closing');
+        const prewittButton= document.getElementById('prewitt');
+        const laplacianButton= document.getElementById('laplacian');
+        const robertsButton= document.getElementById('roberts');
+        const sobelButton= document.getElementById('sobel');
+
+        uploadForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(uploadForm);
+            // Gửi file lên server để xử lý
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        applyMedianFilterButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc trung vị lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'median' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        applyMidpointFilterButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'midpoint' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        cropImageButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán cắt ảnh lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'crop' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        resizeImageButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán resize ảnh lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'resize' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        minButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'min' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        maxButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'max' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+        negativeButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'negative' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        thresholdingButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'thresholding' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        logaritButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'logarit' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        erosionButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'erosion' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        dilationButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'dilation' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        openingButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'opening' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        closingButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'closing' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        prewittButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc điểm giữa lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'prewitt' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+
+
+        laplacianButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc trung vị lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'laplacian' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        robertsButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc trung vị lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'roberts' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+        sobelButton.addEventListener('click', () => {
+            // Gửi yêu cầu xử lý bằng thuật toán lọc trung vị lên server
+            fetch('/apply_filter', {
+                method: 'POST',
+                body: new URLSearchParams({ filter_type: 'sobel' }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                processedImage.src = URL.createObjectURL(blob);
+                processedImage.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
